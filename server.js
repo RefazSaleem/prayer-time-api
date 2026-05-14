@@ -271,4 +271,3 @@ app.listen(CONFIG.port, CONFIG.hostname, () => {
   console.log(`   Origins   : ${origins}`);
   console.log(`   API keys  : ${CONFIG.apiKeys.length} configured\n`);
 });
-
