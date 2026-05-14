@@ -3,7 +3,7 @@
 const fs   = require("fs");
 const path = require("path");
 
-const CONFIG_PATH = path.join(__dirname, "config.env");
+const CONFIG_PATH = path.join(__dirname, "server.conf");
 
 function parseEnvFile(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -19,6 +19,11 @@ function parseEnvFile(filePath) {
     out[line.slice(0, eq).trim()] = line.slice(eq + 1).trim();
   }
   return out;
+}
+
+function optionalString(env, key, fallback) {
+  const v = env[key];
+  return v ? v.trim() : fallback;
 }
 
 function requireString(env, key) {
@@ -73,12 +78,17 @@ function loadConfig() {
     port:           requirePort(env, "PORT"),
     hostname:       requireString(env, "HOSTNAME"),
     allowedOrigins: parseAllowedOrigins(env, "ALLOWED_ORIGINS"),
+
     latitude:       requireFloat(env, "LATITUDE",  -90,  90),
     longitude:      requireFloat(env, "LONGITUDE", -180, 180),
     timezone:       requireTimezone(env, "TIMEZONE"),
+
     method:         requireInt(env, "METHOD", VALID_METHODS),
     madhab:         requireInt(env, "MADHAB", [1, 2]),
+
     apiKeys:        requireApiKeys(env, "API_KEYS"),
+
+    logFile:        optionalString(env, "LOG_FILE", "./server.log"),
   };
 }
 
